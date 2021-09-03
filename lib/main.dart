@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'user_interface/home.dart';
 
 void main() {
-  runApp(MaterialApp(
+  runApp(const MaterialApp(
     home: BillSplitter(),
   ));
 }

@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '/utils/hexcolor.dart';
 
@@ -15,10 +16,10 @@ class _BillSplitterState extends State<BillSplitter> {
   int _personCounter = 1;
   double _billAmount = 0.0;
 
-  Color _purple = HexColor("6908D6");
-  Color _green = HexColor("90E1BA");
-  Color _darkGreen = HexColor("4CBE72");
-  Color _textGreen = HexColor("00523C");
+  //final Color _purple = HexColor("6908D6");
+  final Color _green = HexColor("90E1BA");
+  final Color _darkGreen = HexColor("4CBE72");
+  final Color _textGreen = HexColor("00523C");
 
   @override
   Widget build(BuildContext context) {
@@ -75,6 +76,7 @@ class _BillSplitterState extends State<BillSplitter> {
               ),
               child: Column(
                 children: [
+                  //TextField
                   TextField(
                     keyboardType:
                         TextInputType.numberWithOptions(decimal: true),
@@ -93,6 +95,122 @@ class _BillSplitterState extends State<BillSplitter> {
                         _billAmount = 0.0;
                       }
                     },
+                  ),
+
+                  //Split Row
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 17.0),
+                        child: Text(
+                          "Split",
+                          style: TextStyle(
+                            fontSize: 16.0,
+                            color: Colors.grey[700],
+                          ),
+                        ),
+                      ),
+                      Row(children: [
+                        // Minus Button
+                        InkWell(
+                          onTap: () {
+                            setState(() {
+                              if (_personCounter > 1) {
+                                _personCounter--;
+                              } else {
+                                //do nothing
+                              }
+                            });
+                          },
+                          child: Container(
+                            width: 40.0,
+                            height: 40.0,
+                            margin: EdgeInsets.all(10.0),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(7.0),
+                              color: _darkGreen.withOpacity(0.35),
+                            ),
+                            child: Center(
+                              child: Text(
+                                "-",
+                                style: TextStyle(
+                                  color: Colors.black54,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 28.0,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        //Person Counter Text
+                        Text(
+                          "$_personCounter",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20.0,
+                            color: Colors.green[900],
+                          ),
+                        ),
+
+                        //Add Button
+                        InkWell(
+                          onTap: () {
+                            setState(() {
+                              _personCounter++;
+                            });
+                          },
+                          child: Container(
+                            width: 40.0,
+                            height: 40.0,
+                            margin: EdgeInsets.all(10.0),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(7.0),
+                              color: _darkGreen.withOpacity(0.35),
+                            ),
+                            child: Center(
+                              child: Text(
+                                "+",
+                                style: TextStyle(
+                                  color: Colors.black54,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20.0,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ]),
+                    ],
+                  ),
+
+                  //Tip Row
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 17.0),
+                        child: Text(
+                          "Tip",
+                          style: TextStyle(
+                            fontSize: 16.0,
+                            color: Colors.grey[700],
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(18.0),
+                        child: Text(
+                          "\$50.00",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.green[900],
+                            fontSize: 20.0,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
