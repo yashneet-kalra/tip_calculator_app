@@ -2,6 +2,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:tip_calculator_app/money_icon_icons.dart';
 import '/utils/hexcolor.dart';
 
 class BillSplitter extends StatefulWidget {
@@ -24,8 +25,9 @@ class _BillSplitterState extends State<BillSplitter> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      //backgroundColor: Colors.green.shade50,
       body: Container(
-        margin: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.08),
+        margin: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.03),
         alignment: Alignment.center,
         color: _green.withOpacity(0.15), //Colors.white,
         child: ListView(
@@ -33,6 +35,8 @@ class _BillSplitterState extends State<BillSplitter> {
           padding: EdgeInsets.all(20.5),
           children: [
             Container(
+              margin: EdgeInsets.only(
+                  top: MediaQuery.of(context).size.height * 0.08),
               width: 150,
               height: 150,
               decoration: BoxDecoration(
@@ -44,20 +48,33 @@ class _BillSplitterState extends State<BillSplitter> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      "Total Per Person :",
-                      style: TextStyle(
-                        color: Colors.purple.shade700,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18.0,
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Text(
+                        "Total Per Person :",
+                        style: TextStyle(
+                          color: Colors.purple.shade700,
+                          fontWeight: FontWeight.normal,
+                          fontSize: 15.0,
+                        ),
                       ),
                     ),
-                    Text(
-                      "\$123",
-                      style: TextStyle(
-                        fontSize: 34.0,
-                        color: Colors.black54,
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          MoneyIcon.rupee,
+                          color: Colors.black54,
+                        ),
+                        Text(
+                          "${calculateTotalPerPerson(_billAmount, _tipPercentage, _personCounter)}",
+                          style: TextStyle(
+                            fontSize: 36.0,
+                            color: Colors.black54,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -67,7 +84,14 @@ class _BillSplitterState extends State<BillSplitter> {
               margin: EdgeInsets.only(top: 20.0),
               padding: EdgeInsets.all(8.0),
               decoration: BoxDecoration(
+                //color: Colors.white,
                 color: Colors.transparent,
+                /*boxShadow: [
+                  BoxShadow(
+                      color: Colors.lightGreen,
+                      blurRadius: 10.0,
+                      spreadRadius: 2.0)
+                ],*/
                 border: Border.all(
                   color: Colors.blueGrey,
                   style: BorderStyle.solid,
@@ -86,7 +110,8 @@ class _BillSplitterState extends State<BillSplitter> {
                     decoration: InputDecoration(
                       //prefix: Text("Bill Amount : "),
                       labelText: "Bill Amount : ",
-                      prefixIcon: Icon(Icons.monetization_on_sharp),
+                      prefixIcon: Icon(
+                          MoneyIcon.rupee), //Icon(Icons.monetization_on_sharp),
                     ),
                     onChanged: (String amount) {
                       try {
@@ -201,15 +226,49 @@ class _BillSplitterState extends State<BillSplitter> {
                       ),
                       Padding(
                         padding: const EdgeInsets.all(18.0),
-                        child: Text(
-                          "\$50.00",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.green[900],
-                            fontSize: 20.0,
-                          ),
+                        child: Row(
+                          children: [
+                            Icon(
+                              MoneyIcon.rupee,
+                              color: Colors.green[900],
+                              size: 17.0,
+                            ),
+                            Text(
+                              "${calculateTotalTip(_billAmount, _tipPercentage)}",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.green[900],
+                                fontSize: 20.0,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
+                    ],
+                  ),
+
+                  //Slider Column
+                  Column(
+                    children: [
+                      Text(
+                        "$_tipPercentage%",
+                        style: TextStyle(
+                          color: Colors.green[900],
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18.0,
+                        ),
+                      ),
+                      Slider(
+                          value: _tipPercentage.toDouble(),
+                          min: 0,
+                          max: 100,
+                          divisions: 20,
+                          activeColor: Colors.greenAccent[400],
+                          onChanged: (double newValue) {
+                            setState(() {
+                              _tipPercentage = newValue.round();
+                            });
+                          }),
                     ],
                   ),
                 ],
@@ -219,5 +278,37 @@ class _BillSplitterState extends State<BillSplitter> {
         ),
       ),
     );
+  }
+
+  //function to calculate the Total Tip
+  calculateTotalTip(double billAmount, int tipPercentage) {
+    double totalTip = 0.00;
+
+    if (billAmount == 0 ||
+        billAmount.toString().isEmpty ||
+        billAmount == null) {
+      totalTip = 0.00;
+      return totalTip;
+    } else {
+      totalTip = (billAmount * tipPercentage) / 100;
+    }
+
+    return totalTip;
+  }
+
+  //function to calculate the Total Per Person
+  calculateTotalPerPerson(double billAmount, int tipPercentage, int splitBy) {
+    if (billAmount == 0 ||
+        billAmount.toString().isEmpty ||
+        billAmount == null) {
+      return 0.00;
+    } else {
+      var totalPerPerson =
+          ((calculateTotalTip(billAmount, tipPercentage)) + billAmount) /
+              splitBy;
+
+      return totalPerPerson.toStringAsFixed(2);
+      //return totalPerPerson;
+    }
   }
 }
